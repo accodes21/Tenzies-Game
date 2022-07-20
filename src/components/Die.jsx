@@ -2,7 +2,7 @@ import React from "react";
 
 function Die(props){
     const styles = {
-        backgroundColor: props.isHeld ? "#59E391" : "#bceeff"
+        backgroundColor: props.isHeld ? "#FEAC5E" : "#bceeff"
     }
     return(
         <>
