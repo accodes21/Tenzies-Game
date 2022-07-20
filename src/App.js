@@ -8,6 +8,8 @@ function App() {
 
   const [dice, setDice] = React.useState(allNewDiceNum());
   const [tenzies, setTenzies] = React.useState(false)
+  const [totalRolls, setTotalRolls] = React.useState(0);
+
 
   React.useEffect(() => {
     const allHeld = dice.every(die => die.isHeld) //all dice are on hold
@@ -15,6 +17,7 @@ function App() {
     const allSameValue = dice.every(die => die.value === firstValue)
     if (allHeld && allSameValue){
       setTenzies(true)
+      setRunning(false);
       console.log("You won")
     }
   },[dice])
@@ -43,19 +46,30 @@ function App() {
       setDice(prevDice => prevDice.map(die => {
         return die.isHeld ? die : generateNewDie()
       }))
+      setTotalRolls(totalRolls + 1);
     }
     else{
       setTenzies(false)
       setDice(allNewDiceNum())
+      setTotalRolls(0);
+      setTime(0);
     }
   }
 
   //holding dice
-  function holdDice(id){
-    setDice(prevDice => prevDice.map(die => {
-      return die.id === id ? {...die,isHeld: !die.isHeld} : die
-    }))
-  }
+  function holdDice(id) {
+    setDice((oldArr) =>
+        oldArr.map((die) => {
+            if (id === die.id) {
+                // Start Timer
+                setRunning(true);
+                return { ...die, isHeld: !die.isHeld };
+            } else {
+                return die;
+            }
+        })
+    );
+}
 
   //DICE
   const diceElements = dice.map(die => 
@@ -67,6 +81,22 @@ function App() {
 
   // console.log(allNewDiceNum())
 
+  const [time, setTime] = React.useState(0);
+  const [running, setRunning] = React.useState(false);
+
+  React.useEffect(() => {
+      let interval = null;
+      if (running) {
+          interval = setInterval(() => {
+              setTime((prevTime) => prevTime + 10);
+          }, 10);
+      } else {
+          clearInterval(interval);
+      }
+      return () => clearInterval(interval);
+  }, [running]);
+
+
   return (
     <>
     <main>
@@ -76,6 +106,21 @@ function App() {
       <div className='dice-container'>
         {diceElements}
       </div>
+      <div className="results">
+                <p className="total-rolls">Total Rolls: {totalRolls}</p>
+                <div className="results-time">
+                    <p>Time:</p>
+                    <div>
+                        <span>
+                            {("0" + Math.floor((time / 60000) % 60)).slice(-2)}:
+                        </span>
+                        <span>
+                            {("0" + Math.floor((time / 1000) % 60)).slice(-2)}:
+                        </span>
+                        <span>{("0" + ((time / 10) % 100)).slice(-2)}</span>
+                    </div>
+                </div>
+            </div>
       <button className='roll-btn' 
       onClick={rollDice}
       >
