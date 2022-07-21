@@ -1,3 +1,9 @@
+# Tenzies Game🎲
+Made this tenzies game project using ReactJS.
+
+## Demo
+https://user-images.githubusercontent.com/101868279/180179192-4b047789-e817-42e3-8481-784c559200b9.mp4
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
